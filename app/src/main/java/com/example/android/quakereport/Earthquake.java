@@ -4,16 +4,22 @@
 
 package com.example.android.quakereport;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Earthquake {
 
     //Information about the magnitude of the earthquake
-    private String magnitude;
+    private double magnitude;
 
     //The name of the place the earthquake took place
     private String placeName;
 
     //The date the earthquake occurred
     private String date;
+
+    //The time the earthquake occured
+    private String time;
 
 
     /*
@@ -23,17 +29,21 @@ public class Earthquake {
     @param placeName is the place the earthquake took place
     @param date is the date the earthquake occurred
      */
-    public Earthquake(String xmagnitude, String xplaceName, String xdate){
+    public Earthquake(double xmagnitude, String xplaceName, long xtime){
         magnitude = xmagnitude;
         placeName = xplaceName;
-        date = xdate;
+        Date dateTime = new Date(xtime);
+        SimpleDateFormat formatDate = new SimpleDateFormat("MMM d, y");
+        SimpleDateFormat formatTime = new SimpleDateFormat("h:mm:ss a");
+        date = formatDate.format(dateTime);
+        time = formatTime.format(dateTime);
     }
 
     /**
      * Get the magnitude of the Eartquake
      */
 
-    public String getMag(){
+    public double getMag(){
         return magnitude;
     }
 
@@ -45,10 +55,15 @@ public class Earthquake {
     }
 
     /**
-     * Get the Location of the earthquake
+     * Get the Date of the earthquake
      */
     public String getQuakeDate(){
         return date;
     }
+
+    /**
+     * Get the time of the earthquake
+     */
+    public String getQuakeTime() {return time;}
 
 }
