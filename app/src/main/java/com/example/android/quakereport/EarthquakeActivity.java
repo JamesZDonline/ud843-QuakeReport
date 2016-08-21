@@ -15,10 +15,9 @@
  */
 package com.example.android.quakereport;
 
-import android.app.DownloadManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -32,14 +31,31 @@ public class EarthquakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
-        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        new EarthquakeAsyncTask().execute();
 
-        EarthquakeAdapter earthquakeAdapter = new EarthquakeAdapter(this,earthquakes);
+    }
+
+    private class EarthquakeAsyncTask extends AsyncTask<Void,Void,ArrayList<Earthquake>> {
+
+        @Override
+        protected ArrayList<Earthquake> doInBackground(Void... strings) {
+            ArrayList<Earthquake> result = QueryUtils.extractEarthquakes();
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+            super.onPostExecute(earthquakes);
+            updateUi(earthquakes);
+
+        }
+    }
+
+    private void updateUi(ArrayList<Earthquake> earthquakes){
+        EarthquakeAdapter earthquakeAdapter = new EarthquakeAdapter(EarthquakeActivity.this,earthquakes);
 
         ListView listView = (ListView) findViewById(R.id.quakelist);
 
         listView.setAdapter(earthquakeAdapter);
-
     }
 }

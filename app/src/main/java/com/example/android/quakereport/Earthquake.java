@@ -66,4 +66,6 @@ public class Earthquake {
      */
     public String getQuakeTime() {return time;}
 
+
+
 }
