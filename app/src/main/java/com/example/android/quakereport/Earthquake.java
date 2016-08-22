@@ -70,6 +70,7 @@ public class Earthquake {
      */
     public String getQuakeTime() {return time;}
 
+
     /**
      * Get the URL
      */
