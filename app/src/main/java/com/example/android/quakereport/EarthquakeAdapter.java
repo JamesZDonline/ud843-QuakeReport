@@ -54,10 +54,15 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         String mag = formatter.format(magnitude);
         magnitudeTextView.setText(mag);
 
+        //Get views for the place and the location offset
         TextView placeTextView = (TextView) listItemView.findViewById(R.id.placename_text_view);
         TextView offsetTextView = (TextView) listItemView.findViewById(R.id.offset_text_view);
+
+        //Extract the placename from the earthquake object
         String placeName = earthquake.getPlaceName();
         String locationOffset;
+
+        //Split the placename into the offset and place and insert in views accordingly
         int oflocation = placeName.indexOf(" of ");
         if (oflocation != -1){
             locationOffset = placeName.substring(0,oflocation+4);
@@ -67,6 +72,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         offsetTextView.setText(locationOffset);
         placeTextView.setText(placeName);
 
+        //Get the date and put it in the date text view
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.date_text_view);
         dateTextView.setText(earthquake.getQuakeDate());
 
