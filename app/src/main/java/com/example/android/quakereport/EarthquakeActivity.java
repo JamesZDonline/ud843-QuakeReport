@@ -15,47 +15,57 @@
  */
 package com.example.android.quakereport;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Earthquake>> {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
+    /** Adapter for the list of earthquakes */
+    private EarthquakeAdapter earthquakeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        new EarthquakeAsyncTask().execute();
-
+        //use loader manager and loader to retrieve data async
+        getSupportLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null,this).forceLoad();
     }
 
-    private class EarthquakeAsyncTask extends AsyncTask<Void,Void,ArrayList<Earthquake>> {
-
-        @Override
-        protected ArrayList<Earthquake> doInBackground(Void... strings) {
-            ArrayList<Earthquake> result = QueryUtils.extractEarthquakes();
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
-            super.onPostExecute(earthquakes);
-            updateUi(earthquakes);
-
-        }
-    }
-
+/* Update the to show the quake list*/
     private void updateUi(ArrayList<Earthquake> earthquakes){
-        EarthquakeAdapter earthquakeAdapter = new EarthquakeAdapter(EarthquakeActivity.this,earthquakes);
+        earthquakeAdapter = new EarthquakeAdapter(EarthquakeActivity.this,earthquakes);
 
         ListView listView = (ListView) findViewById(R.id.quakelist);
 
         listView.setAdapter(earthquakeAdapter);
+    }
+/*remove the adapter*/
+    private void cleanUi(){
+        earthquakeAdapter.clear();
+    }
+
+    @Override
+    public Loader<ArrayList<Earthquake>> onCreateLoader(int id, Bundle args) {
+        return new EarthquakeLoader(EarthquakeActivity.this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Earthquake>> loader, ArrayList<Earthquake> earthquakes) {
+        updateUi(earthquakes);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<Earthquake>> loader) {
+        cleanUi();
+
     }
 }
