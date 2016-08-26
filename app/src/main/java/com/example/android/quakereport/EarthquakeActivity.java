@@ -16,7 +16,10 @@
 package com.example.android.quakereport;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -25,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -76,7 +80,17 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public void onLoadFinished(Loader<ArrayList<Earthquake>> loader, ArrayList<Earthquake> earthquakes) {
         updateUi(earthquakes);
         TextView emptyText = (TextView) findViewById(R.id.noEarthquakes);
-        emptyText.setText("No earthquakes found!");
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            emptyText.setText("No earthquakes found!");
+        }else{
+            emptyText.setText("No internet connection.");
+        }
+
+        ProgressBar progressCircle = (ProgressBar) findViewById(R.id.loadingIndicator);
+        progressCircle.setVisibility(View.GONE);
     }
 
     @Override

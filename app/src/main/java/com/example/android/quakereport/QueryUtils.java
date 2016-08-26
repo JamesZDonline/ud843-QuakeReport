@@ -28,6 +28,7 @@ public final class QueryUtils {
 
     public static String fetchEarthquakeData(String requesturl){
 
+
         //Create URL object
         URL url = createUrl(requesturl);
 
