@@ -10,13 +10,15 @@ import java.util.ArrayList;
  * Created by jameszd on 8/22/16.
  */
 public class EarthquakeLoader extends AsyncTaskLoader<ArrayList<Earthquake>> {
-    public EarthquakeLoader(Context context){
+    private String mUrl;
+    public EarthquakeLoader(Context context, String url){
         super(context);
+        mUrl=url;
     }
 
     @Override
     public ArrayList<Earthquake> loadInBackground() {
-        ArrayList<Earthquake> result = QueryUtils.extractEarthquakes();
+        ArrayList<Earthquake> result = QueryUtils.extractEarthquakes(mUrl);
         return result;
     }
 }

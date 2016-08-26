@@ -21,7 +21,6 @@ import java.util.ArrayList;
  */
 public final class QueryUtils {
 
-    private static final String QUERY_URL="http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     /** Tag for the log messages */
     public static final String LOG_TAG = QueryUtils.class.getSimpleName();
@@ -124,7 +123,7 @@ public final class QueryUtils {
      * Return a list of {@link Earthquake} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<Earthquake> extractEarthquakes() {
+    public static ArrayList<Earthquake> extractEarthquakes(String url) {
 
         // Create an empty ArrayList that we can start adding earthquakes to
         ArrayList<Earthquake> earthquakes = new ArrayList<>();
@@ -134,7 +133,7 @@ public final class QueryUtils {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            String jsonResponse = fetchEarthquakeData(QUERY_URL);
+            String jsonResponse = fetchEarthquakeData(url);
             // build up a list of Earthquake objects with the corresponding data.
             JSONObject jsonRootObject = new JSONObject(jsonResponse);
 
@@ -147,8 +146,8 @@ public final class QueryUtils {
                 double mag = properties.getDouble("mag");
                 String place = properties.optString("place");
                 long time = properties.getLong("time");
-                String url = properties.getString("url");
-                earthquakes.add(new Earthquake(mag,place,time,url));
+                String quakeUrl = properties.getString("url");
+                earthquakes.add(new Earthquake(mag,place,time,quakeUrl));
             }
 
         } catch (JSONException e) {
